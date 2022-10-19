@@ -25,14 +25,25 @@ passport.use(
       proxy: true,
     },
     async (accessToken, refreshToken, profile, done) => {
-      const existingUser = await User.findOne({ googleId: profile.id });
-      if (existingUser) {
-        // user already exists
-        return done(null, existingUser);
-      }
-      // create a new user
-      const user = await new User({ googleId: profile.id }).save();
-      done(null, user);
+      console.log(profile);
+
+      User.findOne({ email: profile._json.email }).then((existingUser) => {
+        if (existingUser) {
+          // user already exists
+          done(null, existingUser);
+        } else {
+          // create a new user
+          new User({
+            email: profile._json.email,
+            firstName: profile._json.given_name,
+            lastName: profile._json.family_name,
+          })
+            .save()
+            .then((user) => {
+              done(null, user);
+            });
+        }
+      });
     }
   )
 );
