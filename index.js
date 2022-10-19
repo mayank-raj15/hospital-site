@@ -29,7 +29,7 @@ app.get("/", (req, res) => {
 });
 
 if (process.env.NODE_ENV === "production") {
-  express.use(app.static("client/build"));
+  express.use(express.static("client/build"));
 
   const path = require("path");
   app.get("*", (req, res) => {
