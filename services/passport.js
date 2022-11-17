@@ -25,18 +25,19 @@ passport.use(
       proxy: true,
     },
     async (accessToken, refreshToken, profile, done) => {
-      console.log(profile);
-
       User.findOne({ email: profile._json.email }).then((existingUser) => {
         if (existingUser) {
           // user already exists
           done(null, existingUser);
         } else {
           // create a new user
+          let role = "user";
+          if (profile._json.email === "cse190001035@iiti.ac.in") role = "admin";
           new User({
             email: profile._json.email,
             firstName: profile._json.given_name,
             lastName: profile._json.family_name,
+            role: role,
           })
             .save()
             .then((user) => {

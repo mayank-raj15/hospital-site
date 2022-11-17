@@ -3,7 +3,8 @@ const mongoose = require("mongoose");
 const cookieSession = require("cookie-session");
 const passport = require("passport");
 const keys = require("./config/keys");
-require("./models/user");
+const bodyParser = require("body-parser");
+require("./models/User");
 require("./services/passport");
 
 mongoose.connect(keys.mongoURI);
@@ -11,7 +12,7 @@ mongoose.connect(keys.mongoURI);
 const app = express();
 
 // app.use() acts as a middleware which can update a request before it is received by the route handlers
-
+app.use(bodyParser.json());
 app.use(
   cookieSession({
     maxAge: 30 * 24 * 60 * 60 * 1000,
@@ -23,6 +24,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 require("./routes/authRoutes")(app);
+require("./routes/adminRoutes")(app);
+require("./routes/doctorRoutes")(app);
+require("./routes/profileRoutes")(app);
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));

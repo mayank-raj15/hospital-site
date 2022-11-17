@@ -5,6 +5,10 @@ import * as actions from "../actions";
 
 import Header from "./Header";
 import Landing from "./Landing";
+import AdminProfile from "./admin/AdminProfile";
+import RoleUpdate from "./admin/roleUpdate/RoleUpdate";
+import UserProfile from "./profile/UserProfile";
+import DoctorList from "./doctor/DoctorList";
 const Dashboard = () => <h2>List of Appointments</h2>;
 const AppointmentNew = () => <h2>Create a new Appointment</h2>;
 
@@ -15,13 +19,19 @@ class App extends Component {
 
   render() {
     return (
-      <div className="container">
+      <div>
         <BrowserRouter>
           <div>
             <Header />
-            <Route exact path="/" component={Landing} />
-            <Route exact path="/appointments" component={Dashboard} />
-            <Route path="/appointments/new" component={AppointmentNew} />
+            <div style={{ fontFamily: "Helvetica, sans-serif" }}>
+              <Route exact path="/" component={Landing} />
+              <Route exact path="/appointments" component={Dashboard} />
+              <Route path="/appointments/new" component={AppointmentNew} />
+              <Route exact path="/admin" component={AdminProfile} />
+              <Route path="/admin/updateRole" component={RoleUpdate} />
+              <Route exact path="/doctors" component={DoctorList} />
+              <Route path="/profile" component={UserProfile} />
+            </div>
           </div>
         </BrowserRouter>
       </div>
