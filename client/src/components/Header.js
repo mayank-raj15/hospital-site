@@ -62,6 +62,11 @@ class Header extends Component {
               Update Role
             </a>
           </li>,
+          <li key="activity">
+            <a className="tab-btn" href="/activities">
+              Activity
+            </a>
+          </li>,
         ];
 
       case "coordinator":

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { FETCH_USER, FETCH_DOCTORS } from "./types";
+import { FETCH_USER, FETCH_DOCTORS, FETCH_ACTIVITIES } from "./types";
 
 export const fetchUser = () => async (dispatch) => {
   const res = await axios.get("/api/current_user");
@@ -24,5 +24,22 @@ export const fetchDoctors = () => async (dispatch) => {
 export const updateProfile = (values) => async (dispatch) => {
   const res = await axios.post("/api/profile", values);
 
+  dispatch({ type: FETCH_USER, payload: res.data });
+};
+
+export const fetchActivities = () => async (dispatch) => {
+  const res = await axios.get("/api/activities");
+
+  dispatch({ type: FETCH_ACTIVITIES, payload: res.data });
+};
+
+export const updateStatus = (values) => async (dispatch) => {
+  console.log(values);
+  const res = await axios.post("/api/schedule/status", values);
+  dispatch({ type: FETCH_USER, payload: res.data });
+};
+
+export const updateSchedule = (values) => async (dispatch) => {
+  const res = await axios.post("/api/schedule/days", values);
   dispatch({ type: FETCH_USER, payload: res.data });
 };

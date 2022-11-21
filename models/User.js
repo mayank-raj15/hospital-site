@@ -40,6 +40,10 @@ const userSchema = new Schema({
   specialization: String,
   description: String,
   attendance: [Date],
+  status: {
+    type: String,
+    default: "offline",
+  },
 });
 
 mongoose.model("users", userSchema);

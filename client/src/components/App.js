@@ -9,6 +9,8 @@ import AdminProfile from "./admin/AdminProfile";
 import RoleUpdate from "./admin/roleUpdate/RoleUpdate";
 import UserProfile from "./profile/UserProfile";
 import DoctorList from "./doctor/DoctorList";
+import ActivityList from "./activity/ActivityList";
+import DoctorScheduleView from "./schedule/DoctorScheduleView";
 const Dashboard = () => <h2>List of Appointments</h2>;
 const AppointmentNew = () => <h2>Create a new Appointment</h2>;
 
@@ -31,6 +33,8 @@ class App extends Component {
               <Route path="/admin/updateRole" component={RoleUpdate} />
               <Route exact path="/doctors" component={DoctorList} />
               <Route path="/profile" component={UserProfile} />
+              <Route path="/activities" component={ActivityList} />
+              <Route path="/schedule" component={DoctorScheduleView} />
             </div>
           </div>
         </BrowserRouter>

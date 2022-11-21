@@ -8,7 +8,6 @@ module.exports = (app) => {
     });
 
     const user = await req.user.save();
-    console.log(user);
     res.send(user);
   });
 };
