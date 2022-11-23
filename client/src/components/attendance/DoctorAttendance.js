@@ -38,10 +38,12 @@ class DoctorAttendance extends Component {
 
   renderAttendance = () => {
     const attendanceList = this.props.auth.attendance;
+    const dayToday = new Date().toLocaleDateString("en-GB");
 
     if (
       !attendanceList ||
       !attendanceList.length ||
+      attendanceList[0].day !== dayToday ||
       !attendanceList[0].timestamp
     ) {
       return this.renderAttendanceForm();
