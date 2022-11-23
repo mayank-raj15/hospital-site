@@ -11,6 +11,7 @@ import UserProfile from "./profile/UserProfile";
 import DoctorList from "./doctor/DoctorList";
 import ActivityList from "./activity/ActivityList";
 import DoctorScheduleView from "./schedule/DoctorScheduleView";
+import AttendanceView from "./attendance/AttendanceView";
 const Dashboard = () => <h2>List of Appointments</h2>;
 const AppointmentNew = () => <h2>Create a new Appointment</h2>;
 
@@ -35,6 +36,7 @@ class App extends Component {
               <Route path="/profile" component={UserProfile} />
               <Route path="/activities" component={ActivityList} />
               <Route path="/schedule" component={DoctorScheduleView} />
+              <Route path="/attendance" component={AttendanceView} />
             </div>
           </div>
         </BrowserRouter>

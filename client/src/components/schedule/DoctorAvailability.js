@@ -88,8 +88,6 @@ const DoctorAvailability = () => {
   };
 
   const renderRows = () => {
-    // const minTime = `${}`
-    console.log(days);
     return days.map((dayData, val) => {
       return (
         <div

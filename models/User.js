@@ -1,6 +1,14 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
+const doctorPresentSchema = new Schema({
+  day: String,
+  timestamp: {
+    type: Date,
+    default: null,
+  },
+});
+
 const userSchema = new Schema({
   email: {
     type: String,
@@ -39,7 +47,7 @@ const userSchema = new Schema({
   designation: String,
   specialization: String,
   description: String,
-  attendance: [Date],
+  attendance: [doctorPresentSchema],
   status: {
     type: String,
     default: "offline",

@@ -1,5 +1,10 @@
 import axios from "axios";
-import { FETCH_USER, FETCH_DOCTORS, FETCH_ACTIVITIES } from "./types";
+import {
+  FETCH_USER,
+  FETCH_DOCTORS,
+  FETCH_ACTIVITIES,
+  FETCH_ATTENDANCE,
+} from "./types";
 
 export const fetchUser = () => async (dispatch) => {
   const res = await axios.get("/api/current_user");
@@ -34,7 +39,6 @@ export const fetchActivities = () => async (dispatch) => {
 };
 
 export const updateStatus = (values) => async (dispatch) => {
-  console.log(values);
   const res = await axios.post("/api/schedule/status", values);
   dispatch({ type: FETCH_USER, payload: res.data });
 };
@@ -42,4 +46,24 @@ export const updateStatus = (values) => async (dispatch) => {
 export const updateSchedule = (values) => async (dispatch) => {
   const res = await axios.post("/api/schedule/days", values);
   dispatch({ type: FETCH_USER, payload: res.data });
+};
+
+export const fetchAttendanceCoordinator = () => async (dispatch) => {
+  const res = await axios.get("/api/attendance/coordinator");
+  dispatch({ type: FETCH_ATTENDANCE, payload: res.data });
+};
+
+export const generateCodes = () => async (dispatch) => {
+  const res = await axios.get("/api/attendance/generate");
+  dispatch({ type: FETCH_ATTENDANCE, payload: res.data });
+};
+
+export const markAttendance = (values) => async (dispatch) => {
+  const res = await axios.post("/api/attendance/doctor", values);
+  dispatch({ type: FETCH_USER, payload: res.data });
+};
+
+export const fetchDoctorsListAttendance = () => async (dispatch) => {
+  const res = await axios.get("/api/attendance/admin");
+  dispatch({ type: FETCH_DOCTORS, payload: res.data });
 };

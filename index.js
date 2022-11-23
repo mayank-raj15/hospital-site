@@ -6,6 +6,7 @@ const keys = require("./config/keys");
 const bodyParser = require("body-parser");
 require("./models/User");
 require("./models/Activity");
+require("./models/Attendance");
 require("./services/passport");
 
 mongoose.connect(keys.mongoURI);
@@ -29,6 +30,7 @@ require("./routes/adminRoutes")(app);
 require("./routes/doctorRoutes")(app);
 require("./routes/profileRoutes")(app);
 require("./routes/scheduleRoutes")(app);
+require("./routes/attendanceRoutes")(app);
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));

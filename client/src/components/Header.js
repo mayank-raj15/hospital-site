@@ -53,7 +53,7 @@ class Header extends Component {
             </a>
           </li>,
           <li key="attendance">
-            <a className="tab-btn" href="/admin/attendance">
+            <a className="tab-btn" href="/attendance">
               Attendance
             </a>
           </li>,
@@ -77,8 +77,8 @@ class Header extends Component {
             </a>
           </li>,
           <li key="attendance">
-            <a className="tab-btn" href="/attendance-qr">
-              Attendance QR
+            <a className="tab-btn" href="/attendance">
+              Attendance
             </a>
           </li>,
         ];
@@ -117,6 +117,7 @@ class Header extends Component {
             <img
               style={{ height: "150px", widht: "150px" }}
               src="/logo-iit.png"
+              alt="iiti logo"
             ></img>
           </div>
 

@@ -4,7 +4,14 @@ const User = mongoose.model("users");
 
 module.exports = (app) => {
   app.get("/api/doctors", async (req, res) => {
-    const doctors = await User.find({ role: "doctor" });
+    const doctors = await User.find({ role: "doctor" }, [
+      "firstName",
+      "lastName",
+      "designation",
+      "specialization",
+      "description",
+      "status",
+    ]);
     res.send(doctors);
   });
 };
