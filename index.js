@@ -7,6 +7,7 @@ const bodyParser = require("body-parser");
 require("./models/User");
 require("./models/Activity");
 require("./models/Attendance");
+require("./models/Schedule");
 require("./services/passport");
 
 mongoose.connect(keys.mongoURI);

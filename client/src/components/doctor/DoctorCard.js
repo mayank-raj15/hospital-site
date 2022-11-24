@@ -4,15 +4,23 @@ const DoctorCard = ({ doctor }) => {
   const name = doctor.firstName + " " + doctor.lastName;
 
   return (
-    <div className="card">
-      <div className="content">
-        <div className="header">{name}</div>
-        <div className="description">{doctor.description}</div>
+    <div className="card text-center h-100" style={{ height: "100%" }}>
+      <div className="card-body">
+        <h5 className="card-title" style={{ margin: "5px 0px" }}>
+          {name}
+        </h5>
+        <p class="card-text right" style={{ width: "100%" }}>
+          <small class="text-muted">{doctor.designation}</small>
+        </p>
+        <p className="card-text">{doctor.description}</p>
+        <button
+          className="btn btn-primary profile-button align-items-center"
+          style={{ width: "100%", display: "flex", justifyContent: "center" }}
+        >
+          <i className="add icon"></i>
+          Book Appointment
+        </button>
       </div>
-      <button className="ui bottom attached button">
-        <i className="add icon"></i>
-        Book Appointment
-      </button>
     </div>
   );
 };

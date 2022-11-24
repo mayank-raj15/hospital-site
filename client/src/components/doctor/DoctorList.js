@@ -12,10 +12,7 @@ class DoctorList extends Component {
   renderCards(doctorsArray) {
     return _.map(doctorsArray, (doctor) => {
       return (
-        <div
-          className="four wide column"
-          key={doctor.firstName + "-" + doctor.lastName}
-        >
+        <div className="col" key={doctor.firstName + "-" + doctor.lastName}>
           <DoctorCard doctor={doctor} />
         </div>
       );
@@ -37,8 +34,11 @@ class DoctorList extends Component {
     return categories.map((category) => {
       return (
         <div className="category" key={category}>
-          <div className="ui large header">{category}</div>
-          <div className="ui grid">
+          <h3 className="header text-center">{category}</h3>
+          <div className="row">
+            <hr />
+          </div>
+          <div className="row row-cols-3">
             {this.renderCards(doctorsList[category])}
           </div>
         </div>

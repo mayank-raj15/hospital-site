@@ -1,40 +1,65 @@
 import _ from "lodash";
 import React, { Component } from "react";
-import { reduxForm, Field } from "redux-form";
-import validateEmail from "../../../utils/validateEmail";
-import RoleUpdateField from "./RoleUpdateField";
+import { connect } from "react-redux";
+import { submitRole } from "../../../actions";
 
-import formFields from "./roleUpdateFormFields";
+const userRole = {
+  user: "User",
+  doctor: "Doctor",
+  coordinator: "Coordinator",
+  admin: "Admin",
+};
 
 class RoleUpdateForm extends Component {
-  renderFields() {
-    return _.map(formFields, ({ name, label }) => {
-      return (
-        <Field
-          key={name}
-          type="text"
-          name={name}
-          label={label}
-          component={RoleUpdateField}
-        />
-      );
-    });
-  }
+  state = { email: "", role: "" };
 
   renderContent() {
+    console.log(this.props.userDetails);
     return (
       <div className="container rounded bg-white mt-5 mb-5 ">
-        <form onSubmit={this.props.handleSubmit(this.props.onFormSubmit)}>
-          <div className="row">
-            <div className="p-3 py-5">
-              <div className="d-flex justify-content-between align-items-center mb-3">
-                <h4 className="text-right">Role Update Form</h4>
+        <form>
+          <div className="d-flex justify-content-between align-items-center mb-3">
+            <h4>Role Update Form</h4>
+          </div>
+          <div className="row mt-2">
+            <div className="row">
+              <div className="col-6">
+                <label>Email</label>
+                <input
+                  type="text"
+                  value={this.state.email}
+                  onChange={(event) =>
+                    this.setState({ email: event.target.value })
+                  }
+                />
               </div>
-              <div className="row mt-2">{this.renderFields()}</div>
-              <div className="mt-5 text-center">
+              <div className="col-6">
+                <label>Role</label>
+                <select
+                  className="form-select"
+                  value={this.state.role}
+                  onChange={(event) =>
+                    this.setState({ role: event.target.value })
+                  }
+                >
+                  <option value="user">User</option>
+                  <option value="doctor">Doctor</option>
+                  <option value="coordinator">Coordinator</option>
+                  <option value="admin">Admin</option>
+                </select>
+              </div>
+            </div>
+            <div className="row text-center">
+              <div className="col-12">
                 <button
                   className="btn btn-primary profile-button"
                   type="submit"
+                  onClick={() =>
+                    this.props.submitRole({
+                      email: this.state.email,
+                      role: this.state.role,
+                    })
+                  }
                 >
                   Update Role <i className="material-icons right">done</i>
                 </button>
@@ -51,22 +76,4 @@ class RoleUpdateForm extends Component {
   }
 }
 
-function validate(values) {
-  const errors = {};
-
-  errors.email = validateEmail(values.email);
-
-  _.each(formFields, ({ name, noValueError }) => {
-    if (!values[name]) {
-      errors[name] = noValueError;
-    }
-  });
-
-  return errors;
-}
-
-export default reduxForm({
-  form: "roleUpdateForm",
-  validate,
-  destroyOnUnmount: false,
-})(RoleUpdateForm);
+export default connect(null, { submitRole })(RoleUpdateForm);

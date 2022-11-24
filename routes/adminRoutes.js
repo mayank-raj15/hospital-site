@@ -9,9 +9,19 @@ module.exports = (app) => {
     res.send("Admin profile here");
   });
 
+  app.get("/api/admin/userDetails", requireAdminRights, async (req, res) => {
+    const userEmail = req.query.email;
+    console.log(userEmail);
+    const user = await User.findOne({ email: userEmail }, "role");
+    console.log(user);
+    res.send(user);
+  });
+
   app.post("/api/admin/role", requireAdminRights, async (req, res) => {
     const { email, role } = req.body;
+    console.log(email, role);
     const affectedUser = await User.findOne({ email: email }, "role");
+    if (!affectedUser) return res.status(400).send({ error: "User not found" });
     const prevRole = affectedUser.role;
     User.updateOne(
       {

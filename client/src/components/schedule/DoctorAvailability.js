@@ -1,5 +1,8 @@
 import _ from "lodash";
 import React, { useState } from "react";
+import { connect } from "react-redux";
+import FormError from "./FormError";
+import { submitScheduleDoctor } from "../../actions";
 
 const dayDefault = {
   day: "0",
@@ -7,10 +10,10 @@ const dayDefault = {
   dayStartMinutes: "0",
   dayEndHours: "17",
   dayEndMinutes: "0",
-  breakStartHours: "13",
-  breakStartMinutes: "0",
-  breakEndHours: "14",
-  breakEndMinutes: "0",
+  breakStartHours: "N/A",
+  breakStartMinutes: "N/A",
+  breakEndHours: "N/A",
+  breakEndMinutes: "N/A",
 };
 
 const hospitalTimings = {
@@ -28,8 +31,10 @@ const dayName = [
   "Saturday",
 ];
 
-const DoctorAvailability = () => {
+const DoctorAvailability = ({ scheduleList, submitScheduleDoctor }) => {
   const [days, setDays] = useState([dayDefault]);
+
+  const [errors, setErrors] = useState([]);
 
   const renderDayNameOptions = () => {
     const days = [0, 1, 2, 3, 4, 5, 6];
@@ -67,6 +72,7 @@ const DoctorAvailability = () => {
   const addNewDay = () => {
     const newArr = [...days, dayDefault];
     setDays(newArr);
+    checkErrors(newArr);
   };
 
   const removeRow = (index) => {
@@ -74,6 +80,106 @@ const DoctorAvailability = () => {
       return index !== i;
     });
     setDays(newArr);
+    checkErrors(newArr);
+  };
+
+  const getTimeDifference = (sh, sm, eh, em) => {
+    let dh = eh - sh,
+      dm = em - sm;
+    if (dm < 0) {
+      dm += 60;
+      dh -= 1;
+    }
+
+    return dh * 60 + dm;
+  };
+
+  const checkErrors = (newArr) => {
+    const err = [];
+    const foundDays = new Set();
+    for (let i = 0; i < newArr.length; i++) {
+      if (foundDays.has(newArr[i].day)) {
+        err.push("Different days with same names");
+        break;
+      }
+      foundDays.add(newArr[i].day);
+    }
+
+    for (let i = 0; i < newArr.length; i++) {
+      const td = getTimeDifference(
+        newArr[i].dayStartHours,
+        newArr[i].dayStartMinutes,
+        newArr[i].dayEndHours,
+        newArr[i].dayEndMinutes
+      );
+
+      if (td < 30) {
+        err.push(
+          "End time should be at least 30 minutes ahead of the start time"
+        );
+        break;
+      }
+    }
+
+    for (let i = 0; i < newArr.length; i++) {
+      let countNA = 0;
+      if (newArr[i].breakStartHours === "N/A") countNA++;
+      if (newArr[i].breakEndHours === "N/A") countNA++;
+      if (newArr[i].breakStartMinutes === "N/A") countNA++;
+      if (newArr[i].breakEndMinutes === "N/A") countNA++;
+
+      if (countNA > 0 && countNA < 4) {
+        err.push("Time fields for break must all be N/A or none.");
+        break;
+      }
+    }
+
+    console.log(newArr);
+
+    for (let i = 0; i < newArr.length; i++) {
+      const td = getTimeDifference(
+        newArr[i].breakStartHours,
+        newArr[i].breakStartMinutes,
+        newArr[i].breakEndHours,
+        newArr[i].breakEndMinutes
+      );
+
+      console.log(td);
+
+      if (td < 15) {
+        err.push(
+          "For a break, end time should be at least 15 minutes ahead of the start time"
+        );
+        break;
+      }
+    }
+
+    for (let i = 0; i < newArr.length; i++) {
+      const tdStart = getTimeDifference(
+        newArr[i].dayStartHours,
+        newArr[i].dayStartMinutes,
+        newArr[i].breakStartHours,
+        newArr[i].breakStartMinutes
+      );
+
+      const tdEnd = getTimeDifference(
+        newArr[i].breakEndHours,
+        newArr[i].breakEndMinutes,
+        newArr[i].dayEndHours,
+        newArr[i].dayEndMinutes
+      );
+
+      console.log(tdStart, tdEnd);
+
+      if (tdStart < 0 || tdEnd < 0) {
+        err.push(
+          "Time period of break must lie within the time period of the visit"
+        );
+        break;
+      }
+    }
+
+    setErrors(err);
   };
 
   const updateState = (name, index) => (event) => {
@@ -85,6 +191,7 @@ const DoctorAvailability = () => {
       }
     });
     setDays(newArr);
+    checkErrors(newArr);
   };
 
   const renderRows = () => {
@@ -157,6 +264,9 @@ const DoctorAvailability = () => {
                 value={dayData.breakStartHours}
                 onChange={updateState("breakStartHours", val)}
               >
+                <option key="N/A" value="N/A">
+                  N/A
+                </option>
                 {renderHoursOptions()}
               </select>
             </div>
@@ -167,6 +277,9 @@ const DoctorAvailability = () => {
                 value={dayData.breakStartMinutes}
                 onChange={updateState("breakStartMinutes", val)}
               >
+                <option key="N/A" value="N/A">
+                  N/A
+                </option>
                 {renderMinutesOptions()}
               </select>
             </div>
@@ -177,6 +290,9 @@ const DoctorAvailability = () => {
                 value={dayData.breakEndHours}
                 onChange={updateState("breakEndHours", val)}
               >
+                <option key="N/A" value="N/A">
+                  N/A
+                </option>
                 {renderHoursOptions()}
               </select>
             </div>
@@ -187,6 +303,9 @@ const DoctorAvailability = () => {
                 value={dayData.breakEndMinutes}
                 onChange={updateState("breakEndMinutes", val)}
               >
+                <option key="N/A" value="N/A">
+                  N/A
+                </option>
                 {renderMinutesOptions()}
               </select>
             </div>
@@ -215,7 +334,9 @@ const DoctorAvailability = () => {
       <div className="row">
         <h5>Select Days: </h5>
         {renderRows()}
+        <FormError errors={errors} />
       </div>
+
       <div className="row text-center">
         <div className="col-6" style={{ marginBottom: "30px" }}>
           <button
@@ -227,7 +348,12 @@ const DoctorAvailability = () => {
         </div>
 
         <div className="col-6" style={{ paddingBottom: "20px" }}>
-          <button className="btn btn-primary profile-button" type="submit">
+          <button
+            className="btn btn-primary profile-button"
+            type="submit"
+            disabled={errors.length}
+            onClick={() => submitScheduleDoctor({ days: days })}
+          >
             Confirm <i className="material-icons right">done</i>
           </button>
         </div>
@@ -236,4 +362,10 @@ const DoctorAvailability = () => {
   );
 };
 
-export default DoctorAvailability;
+function mapStateToProps({ scheduleList }) {
+  return { scheduleList };
+}
+
+export default connect(mapStateToProps, { submitScheduleDoctor })(
+  DoctorAvailability
+);

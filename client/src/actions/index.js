@@ -4,6 +4,8 @@ import {
   FETCH_DOCTORS,
   FETCH_ACTIVITIES,
   FETCH_ATTENDANCE,
+  FETCH_SCHEDULE,
+  FETCH_USER_DETAILS,
 } from "./types";
 
 export const fetchUser = () => async (dispatch) => {
@@ -14,9 +16,13 @@ export const fetchUser = () => async (dispatch) => {
   });
 };
 
-export const submitRole = (values, history) => async (dispatch) => {
+export const fetchUserDetails = (values) => async (dispatch) => {
+  const res = await axios.get(`/api/admin/userDetails?email=${values.email}`);
+  dispatch({ type: FETCH_USER_DETAILS, payload: res.data });
+};
+
+export const submitRole = (values) => async (dispatch) => {
   const res = await axios.post("/api/admin/role", values);
-  history.push("/appointments");
   dispatch({ type: FETCH_USER, payload: res.data });
 };
 
@@ -66,4 +72,9 @@ export const markAttendance = (values) => async (dispatch) => {
 export const fetchDoctorsListAttendance = () => async (dispatch) => {
   const res = await axios.get("/api/attendance/admin");
   dispatch({ type: FETCH_DOCTORS, payload: res.data });
+};
+
+export const submitScheduleDoctor = (values) => async (dispatch) => {
+  const res = await axios.post("/api/schedule/submit", values);
+  dispatch({ type: FETCH_SCHEDULE, payload: res.data });
 };

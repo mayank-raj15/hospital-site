@@ -6,7 +6,7 @@ import * as actions from "../actions";
 import Header from "./Header";
 import Landing from "./Landing";
 import AdminProfile from "./admin/AdminProfile";
-import RoleUpdate from "./admin/roleUpdate/RoleUpdate";
+import RoleUpdate from "./admin/roleUpdate/RoleUpdateForm";
 import UserProfile from "./profile/UserProfile";
 import DoctorList from "./doctor/DoctorList";
 import ActivityList from "./activity/ActivityList";
