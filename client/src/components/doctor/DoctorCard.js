@@ -13,6 +13,8 @@ const DoctorCard = ({ doctor }) => {
           <small class="text-muted">{doctor.designation}</small>
         </p>
         <p className="card-text">{doctor.description}</p>
+        <hr />
+        <p className="card-text">Status: {doctor.status}</p>
         <button
           className="btn btn-primary profile-button align-items-center"
           style={{ width: "100%", display: "flex", justifyContent: "center" }}
