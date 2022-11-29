@@ -4,3 +4,5 @@ export const FETCH_ACTIVITIES = "fetch_activities";
 export const FETCH_ATTENDANCE = "fetch_attendance";
 export const FETCH_SCHEDULE = "fetch_schedule";
 export const FETCH_USER_DETAILS = "fetch_user_details";
+export const FETCH_ONE_SCHEDULE = "fetch_one_schedule";
+export const FETCH_APPOINTMENTS = "fetch_appointments";

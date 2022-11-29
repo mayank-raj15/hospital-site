@@ -43,6 +43,11 @@ class Header extends Component {
               Schedule
             </a>
           </li>,
+          <li key="appointments">
+            <a className="tab-btn" href="/appointments">
+              Appointments
+            </a>
+          </li>,
         ];
 
       case "admin":
@@ -50,6 +55,11 @@ class Header extends Component {
           <li key="doctors">
             <a className="tab-btn" href="/doctors">
               Doctors
+            </a>
+          </li>,
+          <li key="schedule">
+            <a className="tab-btn" href="/schedule">
+              Schedule
             </a>
           </li>,
           <li key="attendance">
@@ -79,6 +89,11 @@ class Header extends Component {
           <li key="attendance">
             <a className="tab-btn" href="/attendance">
               Attendance
+            </a>
+          </li>,
+          <li key="appointments">
+            <a className="tab-btn" href="/appointments">
+              Appointments
             </a>
           </li>,
         ];

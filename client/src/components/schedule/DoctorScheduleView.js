@@ -1,5 +1,6 @@
 import _ from "lodash";
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import DoctorAvailability from "./DoctorAvailability";
 import DoctorSchedule from "./DoctorSchedule";
 import DoctorStatus from "./DoctorStatus";
@@ -42,6 +43,7 @@ class DoctorScheduleView extends Component {
   }
 
   render() {
+    if (!this.props.auth) return;
     return (
       <div className="container rounded bg-white mt-5 mb-5">
         <ul
@@ -56,4 +58,8 @@ class DoctorScheduleView extends Component {
   }
 }
 
-export default DoctorScheduleView;
+function mapStateToProps({ auth }) {
+  return { auth };
+}
+
+export default connect(mapStateToProps)(DoctorScheduleView);

@@ -6,6 +6,7 @@ module.exports = (app) => {
   app.get("/api/doctors", async (req, res) => {
     const doctors = await User.find({ role: "doctor" }, [
       "firstName",
+      "email",
       "lastName",
       "designation",
       "specialization",

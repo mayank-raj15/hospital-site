@@ -11,7 +11,7 @@ const userRole = {
 };
 
 class RoleUpdateForm extends Component {
-  state = { email: "", role: "" };
+  state = { email: "", role: "user" };
 
   renderContent() {
     console.log(this.props.userDetails);

@@ -4,15 +4,19 @@ import activitiesReducer from "./activitiesReducer";
 import authReducer from "./authReducer";
 import doctorsReducer from "./doctorsReducer";
 import attendanceReducer from "./attendanceReducer";
-import scheduleReducer from "./scheduleReducer";
+import scheduleListReducer from "./sheduleListReducer";
 import userDetailsReducer from "./userDetailsReducer";
+import scheduleReducer from "./scheduleReducer";
+import appointmentsReducer from "./appointmentsReducer";
 
 export default combineReducers({
   auth: authReducer,
   doctors: doctorsReducer,
   activities: activitiesReducer,
   attendanceList: attendanceReducer,
-  scheduleList: scheduleReducer,
+  scheduleList: scheduleListReducer,
   userDetails: userDetailsReducer,
+  schedule: scheduleReducer,
+  appointments: appointmentsReducer,
   form: reduxForm,
 });

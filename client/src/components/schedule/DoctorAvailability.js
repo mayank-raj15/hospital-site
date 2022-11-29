@@ -1,8 +1,8 @@
 import _ from "lodash";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import FormError from "./FormError";
-import { submitScheduleDoctor } from "../../actions";
+import { submitScheduleDoctor, fetchSchedule } from "../../actions";
 
 const dayDefault = {
   day: "0",
@@ -14,6 +14,8 @@ const dayDefault = {
   breakStartMinutes: "N/A",
   breakEndHours: "N/A",
   breakEndMinutes: "N/A",
+  availableTimeSlots: [],
+  bookedTimeSlots: [],
 };
 
 const hospitalTimings = {
@@ -31,10 +33,22 @@ const dayName = [
   "Saturday",
 ];
 
-const DoctorAvailability = ({ scheduleList, submitScheduleDoctor }) => {
+const DoctorAvailability = ({
+  auth,
+  scheduleList,
+  schedule,
+  fetchSchedule,
+  submitScheduleDoctor,
+}) => {
   const [days, setDays] = useState([dayDefault]);
 
   const [errors, setErrors] = useState([]);
+
+  useEffect(() => {
+    if (auth) {
+      fetchSchedule({ email: auth.email });
+    }
+  }, []);
 
   const renderDayNameOptions = () => {
     const days = [0, 1, 2, 3, 4, 5, 6];
@@ -329,43 +343,144 @@ const DoctorAvailability = ({ scheduleList, submitScheduleDoctor }) => {
     });
   };
 
-  return (
-    <div>
-      <div className="row">
-        <h5>Select Days: </h5>
-        {renderRows()}
-        <FormError errors={errors} />
-      </div>
+  const getTimeSlots = (sh, sm, eh, em) => {
+    sh = parseInt(sh);
+    sm = parseInt(sm);
+    eh = parseInt(eh);
+    em = parseInt(em);
+    let arr = [];
+    console.log(sh, sm, eh, em);
+    let h1 = sh,
+      m1 = sm;
+    let h2 = sh,
+      m2 = sm;
+    if (sm === 45) {
+      h2++;
+      m2 = 0;
+    } else {
+      m2 += 15;
+    }
 
+    while (h2 <= eh) {
+      let hs, ms, he, me;
+      hs = h1 > 9 ? `${h1}` : `0${h1}`;
+      he = h2 > 9 ? `${h2}` : `0${h2}`;
+      ms = m1 > 0 ? `${m1}` : `0${m1}`;
+      me = m2 > 0 ? `${m2}` : `0${m2}`;
+
+      arr.push(`${hs}:${ms} - ${he}:${me}`);
+
+      if (h2 === eh && m2 === em) {
+        break;
+      }
+      h1 += Math.floor((m1 + 15) / 60);
+      m1 = (m1 + 15) % 60;
+      h2 += Math.floor((m2 + 15) / 60);
+      m2 = (m2 + 15) % 60;
+    }
+
+    return arr;
+  };
+
+  const submitSchedule = () => {
+    let newArr = days;
+
+    if (errors.length) {
+      return;
+    }
+
+    for (let i = 0; i < days.length; i++) {
+      let day = days[i];
+
+      const curDay = new Date();
+      const curWeekDay = curDay.getDay();
+      const firstDay = curDay.setDate(curDay.getDate() - curWeekDay);
+      const requiredDay = curDay.setDate(
+        curDay.getDate() + parseInt(newArr[i].day)
+      );
+      newArr[i].date = new Date(requiredDay);
+
+      if (day.breakStartHours === "N/A") {
+        newArr[i].availableTimeSlots = getTimeSlots(
+          day.dayStartHours,
+          day.dayStartMinutes,
+          day.dayEndHours,
+          day.dayEndMinutes
+        );
+      } else {
+        newArr[i].availableTimeSlots = [
+          ...getTimeSlots(
+            day.dayStartHours,
+            day.dayStartMinutes,
+            day.breakStartHours,
+            day.breakStartMinutes
+          ),
+          ...getTimeSlots(
+            day.breakEndHours,
+            day.breakEndMinutes,
+            day.dayEndHours,
+            day.dayEndMinutes
+          ),
+        ];
+      }
+    }
+
+    setDays(newArr);
+
+    submitScheduleDoctor({ days: newArr });
+  };
+
+  if (schedule) {
+    return (
       <div className="row text-center">
-        <div className="col-6" style={{ marginBottom: "30px" }}>
-          <button
-            className="btn btn-primary profile-button"
-            onClick={() => addNewDay()}
-          >
-            Add new day <i className="material-icons right">add</i>
-          </button>
-        </div>
-
-        <div className="col-6" style={{ paddingBottom: "20px" }}>
-          <button
-            className="btn btn-primary profile-button"
-            type="submit"
-            disabled={errors.length}
-            onClick={() => submitScheduleDoctor({ days: days })}
-          >
-            Confirm <i className="material-icons right">done</i>
-          </button>
+        <div className="col">
+          <h4>
+            <b>Schedule already set</b>
+          </h4>
         </div>
       </div>
-    </div>
-  );
+    );
+  } else {
+    return (
+      <div>
+        <div className="row">
+          <h5>Select Days: </h5>
+          {renderRows()}
+          <FormError errors={errors} />
+        </div>
+
+        <div className="row text-center">
+          <div className="col-6" style={{ marginBottom: "30px" }}>
+            <button
+              className="btn btn-primary profile-button"
+              onClick={() => addNewDay()}
+            >
+              Add new day <i className="material-icons right">add</i>
+            </button>
+          </div>
+
+          <div className="col-6" style={{ paddingBottom: "20px" }}>
+            <form onSubmit={() => submitSchedule()}>
+              <button
+                className="btn btn-primary profile-button"
+                type="submit"
+                disabled={errors.length}
+              >
+                Confirm <i className="material-icons right">done</i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    );
+  }
 };
 
-function mapStateToProps({ scheduleList }) {
-  return { scheduleList };
+function mapStateToProps({ auth, scheduleList, schedule }) {
+  return { auth, scheduleList, schedule };
 }
 
-export default connect(mapStateToProps, { submitScheduleDoctor })(
-  DoctorAvailability
-);
+export default connect(mapStateToProps, {
+  fetchSchedule,
+  submitScheduleDoctor,
+})(DoctorAvailability);

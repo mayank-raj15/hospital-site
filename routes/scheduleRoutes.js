@@ -31,15 +31,32 @@ module.exports = (app) => {
     res.send(req.user);
   });
 
-  app.post("/api/schedule/submit", async (req, res) => {
-    const { days } = req.body;
+  app.get("/api/schedule/", async (req, res) => {
+    const userEmail = req.query.email;
     const curDay = new Date();
     const curWeek = getWeekNumber(curDay);
+    const curYear = curDay.getFullYear();
+    const schedule = await Schedule.findOne({
+      week: curWeek,
+      year: curYear,
+      email: userEmail,
+    });
+
+    res.send(schedule);
+  });
+
+  app.post("/api/schedule/submit", async (req, res) => {
+    const { days } = req.body;
+    console.log(days);
+    const curDay = new Date();
+    const curWeek = getWeekNumber(curDay);
+    const curYear = curDay.getFullYear();
     const { startDay, endDay } = startAndEndDayOfWeek(curDay);
 
     let schedule = await Schedule.findOneAndUpdate(
       {
         week: curWeek,
+        year: curYear,
         doctor_id: req.user.id,
       },
       {
@@ -48,13 +65,14 @@ module.exports = (app) => {
     ).exec();
 
     if (schedule) {
-      return res.send([schedule.days]);
+      return res.send({});
     }
 
     const name = `${req.user.firstName} ${req.user.lastName}`;
 
     schedule = new Schedule({
       week: curWeek,
+      year: curYear,
       doctor_id: req.user.id,
       name,
       email: req.user.email,
@@ -63,6 +81,6 @@ module.exports = (app) => {
       days,
     }).save();
 
-    res.send([schedule.days]);
+    res.send({});
   });
 };

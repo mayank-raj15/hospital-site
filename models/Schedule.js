@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const dayScheduleSchema = new Schema({
+  date: {
+    type: Date,
+    default: null,
+  },
   day: String,
   dayStartHours: String,
   dayEndHours: String,
@@ -23,10 +27,19 @@ const dayScheduleSchema = new Schema({
     type: String,
     default: "N/A",
   },
+  availableTimeSlots: {
+    type: [String],
+    default: [],
+  },
+  bookedTimeSlots: {
+    type: [String],
+    default: [],
+  },
 });
 
 const scheduleSchema = new Schema({
   week: Number,
+  year: Number,
   startDate: String,
   endDate: String,
   doctor_id: {

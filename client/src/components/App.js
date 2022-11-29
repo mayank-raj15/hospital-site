@@ -10,10 +10,10 @@ import RoleUpdate from "./admin/roleUpdate/RoleUpdateForm";
 import UserProfile from "./profile/UserProfile";
 import DoctorList from "./doctor/DoctorList";
 import ActivityList from "./activity/ActivityList";
-import DoctorScheduleView from "./schedule/DoctorScheduleView";
 import AttendanceView from "./attendance/AttendanceView";
-const Dashboard = () => <h2>List of Appointments</h2>;
-const AppointmentNew = () => <h2>Create a new Appointment</h2>;
+import AppointmentCreate from "./appointment/AppointmentCreate";
+import AppointmentList from "./appointment/Appointment List";
+import DoctorScheduleView from "./schedule/DoctorScheduleView";
 
 class App extends Component {
   componentDidMount() {
@@ -28,8 +28,7 @@ class App extends Component {
             <Header />
             <div style={{ fontFamily: "Helvetica, sans-serif" }}>
               <Route exact path="/" component={Landing} />
-              <Route exact path="/appointments" component={Dashboard} />
-              <Route path="/appointments/new" component={AppointmentNew} />
+              <Route exact path="/appointments" component={AppointmentList} />
               <Route exact path="/admin" component={AdminProfile} />
               <Route path="/admin/updateRole" component={RoleUpdate} />
               <Route exact path="/doctors" component={DoctorList} />
@@ -37,6 +36,10 @@ class App extends Component {
               <Route path="/activities" component={ActivityList} />
               <Route path="/schedule" component={DoctorScheduleView} />
               <Route path="/attendance" component={AttendanceView} />
+              <Route
+                path="/appointments/create"
+                component={AppointmentCreate}
+              />
             </div>
           </div>
         </BrowserRouter>
