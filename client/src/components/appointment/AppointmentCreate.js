@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 import { fetchSchedule, submitAppointment } from "../../actions";
 
 class AppointmentCreate extends Component {
@@ -128,22 +129,37 @@ class AppointmentCreate extends Component {
     days[index].bookedTimeSlots.push(timeSlot);
     days[index].bookedTimeSlots.sort();
 
-    this.props.submitAppointment({
-      doctorName: this.state.doctorName,
-      doctorEmail: this.state.doctorEmail,
-      date: this.state.date,
-      day: this.state.day,
-      timeSlot,
-      description: this.state.description,
-      scheduleId: this.props.schedule._id,
-      days,
-      week: this.props.schedule.week,
-    });
+    this.props.submitAppointment(
+      {
+        doctorName: this.state.doctorName,
+        doctorEmail: this.state.doctorEmail,
+        date: this.state.date,
+        day: this.state.day,
+        timeSlot,
+        description: this.state.description,
+        scheduleId: this.props.schedule._id,
+        days,
+        week: this.props.schedule.week,
+      },
+      this.props.history
+    );
   };
 
   render() {
-    if (!this.props.location.query || !this.props.schedule) return;
+    if (!this.props.location.query) return;
     console.log(this.state);
+    if (!this.props.schedule) {
+      return (
+        <div
+          className="container rounded bg-white mt-5 mb-5"
+          style={{ padding: "20px" }}
+        >
+          <div className="row text-center justify-content-center">
+            <h4>Doctor has not declared a visit yet.</h4>
+          </div>
+        </div>
+      );
+    }
     return (
       <div
         className="container rounded bg-white mt-5 mb-5"
@@ -191,15 +207,14 @@ class AppointmentCreate extends Component {
             </div>
 
             <div className="col-6" style={{ marginTop: "20px" }}>
-              <form onSubmit={() => this.submitAppointment()}>
-                <button
-                  className="btn btn-primary profile-button"
-                  type="submit"
-                  disabled={this.state.error}
-                >
-                  Confirm <i className="material-icons right">done</i>
-                </button>
-              </form>
+              <button
+                className="btn btn-primary profile-button"
+                type="submit"
+                disabled={this.state.error}
+                onClick={() => this.submitAppointment()}
+              >
+                Confirm <i className="material-icons right">done</i>
+              </button>
             </div>
           </div>
         </div>
@@ -213,5 +228,5 @@ function mapStateToProps({ schedule }) {
 }
 
 export default connect(mapStateToProps, { fetchSchedule, submitAppointment })(
-  AppointmentCreate
+  withRouter(AppointmentCreate)
 );

@@ -13,7 +13,7 @@ class AppointmentList extends Component {
         return (
           <div
             className="row text-center justify-content-center"
-            style={{ border: "2px solid black" }}
+            style={{ border: "2px solid black", padding: "5px" }}
           >
             {this.props.auth.role !== "user" ? (
               <div className="col-6">

@@ -34,9 +34,9 @@ export const fetchDoctors = () => async (dispatch) => {
   dispatch({ type: FETCH_DOCTORS, payload: res.data });
 };
 
-export const updateProfile = (values) => async (dispatch) => {
+export const updateProfile = (values, history) => async (dispatch) => {
   const res = await axios.post("/api/profile", values);
-
+  history.push("/appointments");
   dispatch({ type: FETCH_USER, payload: res.data });
 };
 
@@ -87,8 +87,9 @@ export const submitScheduleDoctor = (values) => async (dispatch) => {
   dispatch({ type: FETCH_SCHEDULE, payload: res.data });
 };
 
-export const submitAppointment = (values) => async (dispatch) => {
+export const submitAppointment = (values, history) => async (dispatch) => {
   const res = await axios.post("/api/appointments/create", values);
+  history.push("/appointments");
   dispatch({ type: FETCH_USER, payload: res.data });
 };
 

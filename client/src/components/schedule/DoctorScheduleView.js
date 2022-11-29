@@ -43,7 +43,7 @@ class DoctorScheduleView extends Component {
   }
 
   render() {
-    if (!this.props.auth) return;
+    if (!this.props.auth || this.props.auth.role !== "doctor") return;
     return (
       <div className="container rounded bg-white mt-5 mb-5">
         <ul

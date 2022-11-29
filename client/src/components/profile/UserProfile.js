@@ -2,6 +2,7 @@ import _ from "lodash";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { reduxForm, Field } from "redux-form";
+import { withRouter } from "react-router-dom";
 import userFormFields from "./userProfileFormFields";
 import doctorFormFields from "./doctorProfileFormFields";
 import UserProfileField from "./UserProfileField";
@@ -15,7 +16,7 @@ class UserProfile extends Component {
       <div className="container rounded bg-white mt-5 mb-5">
         <form
           onSubmit={this.props.handleSubmit((values) =>
-            this.props.updateProfile(values)
+            this.props.updateProfile(values, this.props.history)
           )}
         >
           <div className="row">
@@ -87,6 +88,7 @@ class UserProfile extends Component {
   }
 
   render() {
+    if (!this.props.auth) return;
     return this.renderContent();
   }
 }
@@ -116,5 +118,5 @@ export default connect(
     form: "userProfileForm",
     validate,
     destroyOnUnmount: false,
-  })(UserProfile)
+  })(withRouter(UserProfile))
 );

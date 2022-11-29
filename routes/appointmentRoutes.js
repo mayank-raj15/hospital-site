@@ -1,7 +1,9 @@
 const requireLogin = require("../middlewares/requireLogin");
 const mongoose = require("mongoose");
+const activities = require("../config/activities");
 const Appointment = mongoose.model("appointments");
 const Schedule = mongoose.model("schedules");
+const Activity = mongoose.model("activities");
 
 const getWeekNumber = (curDay) => {
   const curWeekDay = curDay.getDay();
@@ -25,7 +27,7 @@ module.exports = (app) => {
         userEmail: req.user.email,
         week: curWeek,
       });
-    } else if (role == "coordinator") {
+    } else if (role == "coordinator" || role == "admin") {
       appointments = await Appointment.find({ week: curWeek });
     } else if (role == "doctor") {
       appointments = await Appointment.find({
@@ -35,7 +37,8 @@ module.exports = (app) => {
     }
     // console.log(appointments);
 
-    res.send(appointments);
+    if (appointments) res.send(appointments.reverse());
+    else res.send([]);
   });
 
   app.post("/api/appointments/create", async (req, res) => {
@@ -73,6 +76,15 @@ module.exports = (app) => {
       scheduleId,
       week,
     }).save();
+
+    if (appointment) {
+      const desc = `${activities.appointment} ${doctorEmail}`;
+      const activity = await new Activity({
+        userEmail: req.user.email,
+        otherEmail: doctorEmail,
+        description: desc,
+      }).save();
+    }
     res.send(req.user);
   });
 };

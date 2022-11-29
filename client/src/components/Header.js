@@ -17,13 +17,23 @@ class Header extends Component {
           </li>
         );
       default:
-        return (
+        return [
+          <li key="profile">
+            <a className="tab-btn" href="/profile">
+              Profile
+            </a>
+          </li>,
           <li key="logout">
             <a className="tab-btn" href="/api/logout">
               Logout
             </a>
-          </li>
-        );
+          </li>,
+          <li key="role">
+            <a className="tab-btn" href="#" style={{ color: "black" }}>
+              Role: {this.props.auth.role}
+            </a>
+          </li>,
+        ];
     }
   }
 
@@ -57,11 +67,6 @@ class Header extends Component {
               Doctors
             </a>
           </li>,
-          <li key="schedule">
-            <a className="tab-btn" href="/schedule">
-              Schedule
-            </a>
-          </li>,
           <li key="attendance">
             <a className="tab-btn" href="/attendance">
               Attendance
@@ -84,6 +89,11 @@ class Header extends Component {
           <li key="doctors">
             <a className="tab-btn" href="/doctors">
               Doctors
+            </a>
+          </li>,
+          <li key="schedule">
+            <a className="tab-btn" href="/schedule/coordinator">
+              Schedule
             </a>
           </li>,
           <li key="attendance">
@@ -173,11 +183,6 @@ class Header extends Component {
             </Link>
             <ul className="right">
               {this.renderContentRole()}
-              <li>
-                <a className="tab-btn" href="/profile">
-                  Profile
-                </a>
-              </li>
 
               {this.renderContentLog()}
             </ul>

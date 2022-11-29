@@ -44,6 +44,6 @@ module.exports = (app) => {
 
   app.get("/api/activities", async (req, res) => {
     const activities = await Activity.find({});
-    res.send(activities);
+    res.send(activities.reverse());
   });
 };
