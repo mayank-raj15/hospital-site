@@ -28,11 +28,6 @@ class Header extends Component {
               Logout
             </a>
           </li>,
-          <li key="role">
-            <a className="tab-btn" href="#" style={{ color: "black" }}>
-              Role: {this.props.auth.role}
-            </a>
-          </li>,
         ];
     }
   }

@@ -37,7 +37,7 @@ module.exports = (app) => {
     }
     // console.log(appointments);
 
-    if (appointments) res.send(appointments.reverse());
+    if (appointments) res.send(appointments);
     else res.send([]);
   });
 
